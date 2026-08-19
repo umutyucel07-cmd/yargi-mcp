@@ -16,6 +16,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
+from mcp_http_compat import MCPHeaderCompatibilityMiddleware
 from mcp_server_main import create_app
 
 # Setup logging
@@ -49,12 +50,19 @@ class UTF8JSONResponse(JSONResponse):
         ).encode("utf-8")
 
 custom_middleware = [
+    Middleware(MCPHeaderCompatibilityMiddleware),
     Middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["Content-Type", "X-Request-ID", "X-Session-ID"],
+        allow_headers=[
+            "Content-Type",
+            "X-Request-ID",
+            "X-Session-ID",
+            "Session-ID",
+            "mcp-session-id",
+        ],
     ),
 ]
 
