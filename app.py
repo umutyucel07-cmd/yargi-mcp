@@ -12,6 +12,7 @@ see asgi_app.py instead.
 """
 
 from starlette.responses import JSONResponse
+from mcp_http_compat import MCPHeaderCompatibilityMiddleware
 from mcp_server_main import create_app
 
 mcp = create_app()
@@ -29,6 +30,7 @@ async def health_check(request):
 
 # Create ASGI app directly from FastMCP server
 app = mcp.http_app()
+app.add_middleware(MCPHeaderCompatibilityMiddleware)
 
 # Endpoints:
 # - /mcp/   - MCP server (Streamable HTTP transport, default FastMCP path)
